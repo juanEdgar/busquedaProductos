@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscador con Resultados</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Buscador de Productos</h1>
+        <div class="input-group mb-3">
+            <input type="text" id="search-input" class="form-control" placeholder="Buscar por producto o código de barras..." aria-label="Buscar" aria-describedby="button-addon2">
+            <button class="btn btn-primary" type="button" id="button-addon2">Buscar</button>
+        </div>
+
+        <table class="table table-striped" id="result-table">
+            <thead>
+                <tr>
+                    <th scope="col">Código</th>
+                    <th scope="col">Producto</th>
+                    <th scope="col">Precio</th>
+                </tr>
+            </thead>
+            <tbody>              
+            </tbody>
+        </table>
+    </div>
+    <div id="alert-message" class="alert alert-info d-none" role="alert">
+        <!-- Mensaje se mostrará aquí -->
+    </div>
+    
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    
+    <script type="text/javascript" >
+        
+        let inventario = 
+            [
+                {codigo: "123", nombre: "Coca cola un litro", precio: 55.5},
+                {codigo: "456",nombre: "Coca cola medio litro", precio: 10},
+                {codigo: "786",nombre: "Maravilla un litro", precio: 8.50},
+            ];
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        function buscarProducto( search ){
+            console.log(search);
+            
+            const busqueda = search.trim().toUpperCase();
+            
+            return inventario.filter(objeto =>
+                objeto.nombre.toUpperCase().trim().startsWith(busqueda)
+                || objeto.nombre.toUpperCase().trim().endsWith(busqueda)  
+                ||  objeto.codigo.startsWith(busqueda) 
+                || objeto.codigo.endsWith(busqueda) 
+            );
+            
+        }
+        
+        // Seleccionar el botón por su id
+        const searchInput = document.getElementById('search-input');
+        const searchButton = document.getElementById('button-addon2');
+        searchButton.disabled = true;
+
+        // Agregar el listener de input al campo de búsqueda
+        searchInput.addEventListener('input', function() {
+            // Habilitar el botón solo si el campo de búsqueda no está vacío
+            if (searchInput.value.trim() !== "") {
+                searchButton.disabled = false;
+            } else {
+                searchButton.disabled = true;
+            }
+        });
+
+
+        // Agregar el listener onclick
+        searchButton.addEventListener('click', function() {
+            // Acción que se ejecutará cuando se haga clic en el botón
+            let salida = buscarProducto( searchInput.value )
+            
+            const resultTableBody = document.querySelector('#result-table tbody');
+            const alertMessage = document.getElementById('alert-message');
+
+            
+            // Limpiar la tabla antes de añadir nuevos resultados
+            resultTableBody.innerHTML = '';
+            alertMessage.textContent = "";
+            alertMessage.classList.add('d-none');
+            
+            if (salida.length > 0 ){
+
+                // Iterar sobre el array y añadir los datos a la tabla
+                salida.forEach(resultado => {
+                    const row = document.createElement('tr');
+                    const cell1 = document.createElement('td');
+                    const cell2 = document.createElement('td');
+                    const cell3 = document.createElement('td');
+
+                    cell1.textContent = resultado.codigo;
+                    cell2.textContent = resultado.nombre;
+                    cell3.textContent = resultado.precio;
+
+                    row.appendChild(cell1);
+                    row.appendChild(cell2);
+                    row.appendChild(cell3);
+                    resultTableBody.appendChild(row);
+                });
+            }else {
+                
+                alertMessage.textContent = "No hay resultados para la busqueda: "+searchInput.value ;
+                alertMessage.classList.remove('d-none');
+            }
+            
+            searchInput.value =""
+            
+        });
+        
+        
+        
+    </script>
+    
+</body>
+</html>
+
